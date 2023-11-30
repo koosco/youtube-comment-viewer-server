@@ -24,19 +24,18 @@ def post_response():
     if data and 'url' in data:
         url = data['url']
     print(url)
-    print(type(url))
 
     driver.get(url)
     start = time.time()
     time.sleep(SCROLL_PAUSE_TIME)
     actions = driver.find_element(By.CSS_SELECTOR, 'body')
 
-    for i in range(1, 6):
-        #driver.execute_script("window.scrollTo(0, document.body.scrollHeight, 'instant');")
+    for i in range(1, 11):
+        # driver.execute_script("window.scrollTo(0, document.body.scrollHeight, 'instant');")
         actions.send_keys(Keys.END)
-        time.sleep(1)
+        time.sleep(SCROLL_PAUSE_TIME)
 
-    time.sleep(2)
+    time.sleep(SCROLL_PAUSE_TIME)
     html_source = driver.page_source
     soup = BeautifulSoup(html_source, 'html.parser')
 
@@ -55,11 +54,16 @@ def post_response():
     
     end = time.time()
     print(end - start)
-    data = {'text': result}
-    with open('res.txt', 'w') as f:
+
+    with open('전체텍스트.txt', 'w') as f:
+        f.write(result)
+
+    with open('댓글별텍스트.txt', 'w') as f:
         for comment in comment_final:
             f.write(comment)
             f.write('\n')
+
+    data = {'text': result}
     return jsonify(data)
 
 if __name__ == '__main__':
